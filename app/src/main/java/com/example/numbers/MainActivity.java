@@ -8,32 +8,54 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    String TAG = MainActivity.class.getSimpleName();
     private TextView number;
+    int secret = new Random().nextInt(10)+1;
+    private ImageView result;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "secret:" + secret);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         number = findViewById(R.id.num);
+        result = findViewById(R.id.smile_image);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int n = Integer.parseInt(number.getText().toString())+1;
                 number.setText(Integer.toString(n));
+                result.setAlpha(1.0f);
+                result.setVisibility(View.VISIBLE);
+                if(n == secret){
+                    Toast.makeText(MainActivity.this, "BINGO!!", Toast.LENGTH_LONG).show();
+                    result.setImageResource(R.drawable.bomb);
+                } else {
+                    result.setImageResource(R.drawable.smile);
+                    result.animate().alpha(0.0f).setDuration(1200);
+                }
             }
         });
     }
     public void zero(View view) {
         int n = 0;
         number.setText(Integer.toString(n));
+        result.setImageResource(R.drawable.smile);
+        result.animate().alpha(0.0f).setDuration(1200);
     }
 
     @Override
